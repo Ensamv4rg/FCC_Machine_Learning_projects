@@ -14,12 +14,8 @@ def player(prev_play, opponent_history=[],player_history=[]):
         index=quincy_pattern.find("".join(history[:2]))
         if "".join(opponent_history[-3:]) == quincy_pattern[index+2:index+5]:
             is_quincy = True
-        
 
-
-
-
-    if len(player_history) >= 2 and opponent_history[2:-1] == [responses[x] for x in player_history[:-2]]:
+    if len(player_history) >= 2 and opponent_history[2:-1] == [responses[x] for x in player_history[1:]]:
         print("Kris")
         guess = responses[player_history[-1]]
 
@@ -27,26 +23,22 @@ def player(prev_play, opponent_history=[],player_history=[]):
         print('Quincy')
         guess = quincy_pattern[index]
 
-    elif len(player_history) >= 2 and opponent_history[-1] == responses[max(set(last_ten), key=last_ten.count)] and opponent_history[1] != "P":
+    elif len(player_history) >= 2 and opponent_history[-1] == responses[max(set(last_ten), key=last_ten.count)] and opponent_history[-1] == opponent_history[-2]:
         print('Mrguesh')
         last_ten = player_history[-10:]
         guess = responses[max(set(last_ten), key=last_ten.count)]
 
     elif len(player_history) >=2:
-        print('abbey')
-        window_size = min(10, len(player_history))  # Use the last 10 moves or the length of the history if shorter
-        recent_history = player_history[-window_size:]
-
-        move_pairs = [recent_history[i] + recent_history[i + 1] for i in range(len(recent_history) - 1)]
-
-        if move_pairs:
-            most_frequent_move_pair = max(set(move_pairs), key=move_pairs.count)
-            last_move = most_frequent_move_pair[-1]
-        else:
-            last_move = player_history[-1]
-
-        guess = responses[last_move]
-
+        last_play = player_history[-1]
+        probable_moves = [last_play+"R", last_play+"S", last_play+"P"]
+        times_played = []
+        for move in probable_moves:
+            times_played.append(len("".join(player_history).split(move)))
+        guess = probable_moves[times_played.index(max(times_played))][-1]
+        
+        
+    
+        
         
         
         
